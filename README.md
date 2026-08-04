@@ -59,7 +59,7 @@ On power-up the firmware requires the wire guide to be homed against its physica
 | `ZERO_SET_MODE` | Operator dials in the offset from the physical switch to the logical winding-start position. |
 | `MENU_MODE` | Encoder scrolls between MANUAL / SEMI-AUTO / AUTOMATIC / SETUP; button selects. |
 | `MANUAL_MODE` | Free-running spindle, forward or reverse, speed adjustable live, no auto-stop on turns (stops at 0 turns in reverse). |
-| `SEMI_AUTO_MODE` | Runs and auto-stops at the target turn count, but requires pressing the button again to advance/resume between layers or after completion. |
+| `SEMI_AUTO_MODE` | Winds one layer, then automatically stops the motor at every layer boundary so the operator can install inter-layer insulation; button press resumes the next layer. Also auto-stops for good at the target turn count. |
 | `AUTO_MODE` | Fully automatic: winds continuously through all layers up to the target turn count, then stops. |
 | `SETUP_MODE` | 4-parameter configuration screen (see below). |
 
@@ -89,8 +89,11 @@ Reached via the menu's SETUP option, cycled with the encoder button:
 **Manual winding / touch-up work**
 - Select MANUAL for direct, un-timed control: start/stop with the button, adjust speed live with the encoder, reverse by dialing speed through 0. Useful for hand-guiding unusual wire or finishing partial coils.
 
-**Layer-by-layer supervised winding (SEMI-AUTO)**
-- Same automatic turn-counting and auto-stop as AUTO mode, but intended for operators who want to pause/inspect between layers rather than let the whole coil wind unattended.
+**Layer-by-layer supervised winding (SEMI-AUTO)** — likely the most commonly used mode
+
+SEMI-AUTO behaves exactly like AUTO (automatic turn-counting, layer traversal, and final auto-stop at the target turn count), with one key difference: the motor is automatically stopped every time a layer boundary is reached (`layerCount` increments and the wire guide reverses direction), instead of continuing straight into the next layer.
+
+This pause exists specifically so the operator can install **inter-layer insulation** — tape, paper, or film — between windings before the next layer starts, which is standard practice for transformer/inductor coils to maintain insulation and even layering. Once the insulation is placed, pressing the button resumes winding the next layer from exactly where it left off (turn count and wire-guide position are preserved, nothing is reset). This repeats at every layer boundary until the target turn count is reached, at which point the winder stops for good, the same as AUTO mode.
 
 **Right-to-left coils**
 - For bobbins/fixtures where the wire needs to be dressed starting from the far end and finishing near the limit switch, set wind direction to R→L in SETUP. The firmware then treats the dialed zero offset as the far starting point and prevents a coil length that would drive the carriage past the switch.
