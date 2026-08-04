@@ -1,5 +1,7 @@
 # Coil Winder Firmware
 
+English | **[Русский](README.ru.md)**
+
 Arduino firmware for a two-axis coil winding machine: a stepper-driven **main shaft** (spindle) that rotates the bobbin, and a stepper-driven **wire guide** (traverse carriage on a lead screw) that lays the wire evenly across the coil width, mechanically synchronized to the main shaft rotation. Control and status are handled through a 16x2 character LCD and a rotary encoder with push-button.
 
 ## Demo
